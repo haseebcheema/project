@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import { useActionData, useNavigate } from "react-router-dom";
 
 export default function Signup() {
     const [formData, setFormData] = useState({
@@ -7,6 +8,8 @@ export default function Signup() {
         email: '',
         password: '',
     });
+
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -18,6 +21,8 @@ export default function Signup() {
         try {
             const response = await axios.post('http://localhost:3000/auth/register', formData);
             alert(response.data.message);
+            navigate('/login');
+
         } catch (error) {
             console.error('Registration error:', error);
             alert(error.response.data.error || 'An error occurred during registration.');

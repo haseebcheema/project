@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
     });
+
+    const navigate = useNavigate()
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -18,7 +21,7 @@ export default function Login() {
             const response = await axios.post('http://localhost:3000/auth/login', formData);
             alert('Login successful!');
             localStorage.setItem('token', response.data.token); // Store token
-            // Redirect or update state as needed
+            navigate('/dashboard');
         } catch (error) {
             console.error('Login error:', error);
             alert(error.response.data.error || 'An error occurred during login.');
