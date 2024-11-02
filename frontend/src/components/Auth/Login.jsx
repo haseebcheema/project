@@ -1,30 +1,36 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
-    const [formData, setFormData] = useState({
-        email: '',
-        password: '',
-    });
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
-    const navigate = useNavigate()
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value);
+    };
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+    const handlePasswordChange = (e) => {
+        setPassword(e.target.value);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3000/auth/login', formData);
-            alert('Login successful!');
-            localStorage.setItem('token', response.data.token); // Store token
-            navigate('/dashboard');
+            const response = await axios.post('http://localhost:3000/auth/login', { email, password });
+            const data = response.data;
+
+            if (data.token) {
+                localStorage.setItem('token', data.token);
+                alert('Login successful!');
+                navigate('/dashboard');
+            } else {
+                alert('Invalid login credentials');
+            }
         } catch (error) {
             console.error('Login error:', error);
-            alert(error.response.data.error || 'An error occurred during login.');
+            alert(error.response?.data?.error || 'An error occurred during login.');
         }
     };
 
@@ -36,8 +42,8 @@ export default function Login() {
                     type="email"
                     name="email"
                     placeholder="Email"
-                    value={formData.email}
-                    onChange={handleChange}
+                    value={email}
+                    onChange={handleEmailChange}
                     required
                     className="mb-4 p-2 border border-gray-300 rounded w-full"
                 />
@@ -45,8 +51,8 @@ export default function Login() {
                     type="password"
                     name="password"
                     placeholder="Password"
-                    value={formData.password}
-                    onChange={handleChange}
+                    value={password}
+                    onChange={handlePasswordChange}
                     required
                     className="mb-4 p-2 border border-gray-300 rounded w-full"
                 />

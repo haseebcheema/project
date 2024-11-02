@@ -1,4 +1,4 @@
-const { pool } = require("../config/dbPostgres");
+const { pool } = require("../config/db.postgres");
 
 const createUsersTable = async () => {
   const query = `

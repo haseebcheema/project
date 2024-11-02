@@ -1,31 +1,34 @@
-import React, { useState } from 'react'
-import axios from 'axios'
-import { useActionData, useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function Signup() {
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        password: '',
-    });
-
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+    const handleNameChange = (e) => {
+        setName(e.target.value);
+    };
+
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value);
+    };
+
+    const handlePasswordChange = (e) => {
+        setPassword(e.target.value);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3000/auth/register', formData);
+            const response = await axios.post('http://localhost:3000/auth/register', { name, email, password });
             alert(response.data.message);
             navigate('/login');
-
         } catch (error) {
             console.error('Registration error:', error);
-            alert(error.response.data.error || 'An error occurred during registration.');
+            alert(error.response?.data?.error || 'An error occurred during registration.');
         }
     };
 
@@ -37,8 +40,8 @@ export default function Signup() {
                     type="text"
                     name="name"
                     placeholder="Name"
-                    value={formData.name}
-                    onChange={handleChange}
+                    value={name}
+                    onChange={handleNameChange}
                     required
                     className="mb-4 p-2 border border-gray-300 rounded w-full"
                 />
@@ -46,8 +49,8 @@ export default function Signup() {
                     type="email"
                     name="email"
                     placeholder="Email"
-                    value={formData.email}
-                    onChange={handleChange}
+                    value={email}
+                    onChange={handleEmailChange}
                     required
                     className="mb-4 p-2 border border-gray-300 rounded w-full"
                 />
@@ -55,8 +58,8 @@ export default function Signup() {
                     type="password"
                     name="password"
                     placeholder="Password"
-                    value={formData.password}
-                    onChange={handleChange}
+                    value={password}
+                    onChange={handlePasswordChange}
                     required
                     className="mb-4 p-2 border border-gray-300 rounded w-full"
                 />
